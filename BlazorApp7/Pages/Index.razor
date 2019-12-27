@@ -1,0 +1,207 @@
+﻿@page "/"
+@using Syncfusion.EJ2.Blazor
+@using Syncfusion.EJ2.Blazor.Navigations
+@using Syncfusion.EJ2.Blazor.DropDowns
+@using Syncfusion.EJ2.Blazor.Layouts
+@using Syncfusion.EJ2.Blazor.Popups
+@using Syncfusion.EJ2.Blazor.Inputs
+@using Syncfusion.EJ2.Blazor.Buttons
+@using Syncfusion.EJ2.Blazor.Spinner
+@inject IJSRuntime JSRuntime
+@using BlazorApp7.Data;
+
+<div class="col-lg-12 control-section">
+    <div class="control_wrapper">
+        <div class="expand-pane">
+            <EjsSplitter Width="1200px" SeparatorSize="3">
+                <SplitterPanes>
+                    <SplitterPane Size="50%">
+                        <ChildContent>
+                            <div>
+                                <EjsSplitter ID="inner-splitter" SeparatorSize="3" Orientation="Syncfusion.EJ2.Blazor.Layouts.Orientation.Vertical">
+                                    <SplitterPanes>
+                                        <SplitterPane Size="50%" Collapsible="true">
+                                            <ChildContent>
+                                                <div class="code-editor-content">
+                                                    <EjsTab @ref="Tab" CssClass="default-tab">
+                                                        <TabItems>
+                                                            <TabItem>
+                                                                <ChildContent>
+                                                                    <TabHeader Text="INDEX"></TabHeader>
+                                                                </ChildContent>
+                                                            </TabItem>
+                                                        </TabItems>
+                                                    </EjsTab>
+                                                    <textarea id="pageCode" @bind="@this.pageCode"></textarea>
+                                                </div>
+                                            </ChildContent>
+                                        </SplitterPane>
+                                        <SplitterPane Size="50%" Collapsible="true">
+                                            <EjsSplitter Orientation="Syncfusion.EJ2.Blazor.Layouts.Orientation.Horizontal">
+                                                <SplitterPanes>
+                                                    <SplitterPane Collapsible="true">
+                                                        <div id="pane2">
+                                                            <div class="cont">
+                                                                <textarea id="controllerCode" @bind="@this.hostHtmlCode"></textarea>
+                                                                @*<span id="model" class="span sh"></span>*@
+                                                            </div>
+                                                        </div>
+                                                    </SplitterPane>
+                                                    <SplitterPane Collapsible="true">
+                                                        <div id="pane3">
+                                                            <div class="cont">
+                                                                <textarea id="viewCode" @bind="@this.startUpCode"></textarea>
+                                                                @*<span id="controller" class="span sh">Controller</span>*@
+                                                            </div>
+                                                        </div>
+                                                    </SplitterPane>
+                                                </SplitterPanes>
+                                            </EjsSplitter>
+                                        </SplitterPane>
+                                    </SplitterPanes>
+                                </EjsSplitter>
+                            </div>
+                        </ChildContent>
+                    </SplitterPane>
+                    <SplitterPane>
+                        <ChildContent>
+                            <div>
+                                <EjsSplitter SeparatorSize="3" Orientation="Syncfusion.EJ2.Blazor.Layouts.Orientation.Vertical">
+                                    <SplitterPanes>
+                                        
+                                        <SplitterPane Collapsible="true" Size="70%">
+                                            <div id="pane4" style="position:relative;">
+                                                <div id="output_loader" style="height: 70%;">
+                                                    <a href="https://localhost:5001/" class="section-label show" style="opacity: 1.2; " id="view-fullscreen" title="View in Full Screen" target="_blank"><span id="full" class="e-icon span"></span></a>
+
+                                                    <div class="cont" id="iframe">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </SplitterPane>
+                                        <SplitterPane Collapsible="true">
+                                            <div id="outputlogs" style="height: 30%;">
+
+                                            </div>
+                                        </SplitterPane>
+                                    </SplitterPanes>
+                                </EjsSplitter>
+                            </div>
+                        </ChildContent>
+                    </SplitterPane>
+                </SplitterPanes>
+            </EjsSplitter>
+        </div>
+    </div>
+</div>
+
+
+@code{
+
+    EjsDialog DialogObj;
+    //EjsSpinner spinnerObj;    
+
+    EjsTextBox TextboxObj;
+
+    EjsTab Tab;
+
+    public string txtValue { get; set; } = "<p> Syncfusion live</p>";
+
+    public string dynamicHeader { get; set; }
+
+    public string DialogText { get; set; } = "Greetings Nancy! When will you share me the source files of the project?";
+    private string TextboxValue;
+    private void OnBtnClick()
+    {
+        this.DialogObj.Show();
+    }
+    private void OnokBtnclick(Microsoft.AspNetCore.Components.Web.MouseEventArgs args)
+    {
+        List<TabItem> source = new List<TabItem>()
+{
+        new TabItem() { Header = new TabHeader() { Text = @dynamicHeader } }
+      };
+        this.Tab.AddTab(source, this.Tab.Items.Count() - 1);
+    }
+
+    private void OncancelBtnclick()
+    {
+
+    }
+
+    private string pageCode { get; set; }
+    private string startUpCode { get; set; }
+    private string hostHtmlCode { get; set; }
+
+    LiveEditor liveEditor = new LiveEditor();
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.pageCode = liveEditor.getPageText();
+        this.startUpCode = liveEditor.getStartUpText();
+        this.hostHtmlCode = liveEditor.getHostHtmlText();
+    }
+
+    //protected override async Task OnAfterRenderAsync(bool firstRender)
+    //{
+    //    await JSRuntime.InvokeVoidAsync("exampleJsFunctions.initialize", DotNetObjectReference.Create(this));
+    //}
+
+    [JSInvokable]
+
+    public void onBuild(DataValue data)
+    {
+        liveEditor.BuildEngine(data, JSRuntime);
+    }
+
+    //LiveEditor liveEditor1 = new LiveEditor();
+
+    //protected override async Task OnInitializedAsync()
+    //{
+    //    this.pageCode = liveEditor.getPageText();
+    //    this.startUpCode = liveEditor.getStartUpText();
+    //    this.hostHtmlCode = liveEditor.getHostHtmlText();
+    //}
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await JSRuntime.InvokeVoidAsync("exampleJsFunctions.initialize", DotNetObjectReference.Create(this));
+    }
+
+    //[JSInvokable]
+
+    //public void onBuild(DataValue data)
+    //{
+    //    liveEditor.BuildEngine(data, JSRuntime);
+    //}
+}
+<style>
+
+    .content {
+        padding: 9px;
+    }
+
+    a, p {
+        padding: 10px;
+    }
+
+    .expand-pane {
+        margin: 10px auto;
+    }
+        /* styles to hide scroll bars */
+        .expand-pane .e-pane.e-pane-horizontal.e-scrollable::-webkit-scrollbar,
+        .expand-pane .e-pane.e-pane-vertical.e-scrollable::-webkit-scrollbar {
+            display: none;
+        }
+
+        .expand-pane .e-pane.e-pane-horizontal.e-scrollable, .expand-pane .e-pane.e-pane-vertical.e-scrollable {
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+    .control-section {
+        min-height: 370px;
+        margin-bottom: 15px;
+        margin-top: 10px;
+    }
+</style>

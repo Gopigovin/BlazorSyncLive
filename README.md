@@ -1,2 +1,2 @@
-# BlazorSyncLive
-Blazor live Editor
+# BlazorBytes
+Blazor syncfusion live editor

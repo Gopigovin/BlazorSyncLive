@@ -1,0 +1,109 @@
+﻿@page "/Header"
+
+@using Syncfusion.EJ2.Blazor;
+@using Syncfusion.EJ2.Blazor.Navigations;
+@using Syncfusion.EJ2.Blazor.Data;
+@using Syncfusion.EJ2.Blazor.Buttons;
+@using Syncfusion.EJ2.Blazor.DropDowns;
+@using BlazorApp7.Data;
+@inject IJSRuntime JSRuntime
+
+<EjsToolbar Height="65px">
+    <ToolbarItems>
+        <ToolbarItem>
+            <Template>
+                <div>
+                    <img class="sync-image" src="https://cdn.syncfusion.com/content/images/Logo/Logo_150dpi.png" />
+                    <span class="title">BLAZOR PLAYGROUND </span>
+                </div>
+            </Template>
+        </ToolbarItem>
+        <ToolbarItem>
+            <Template>
+                <EjsButton CssClass="e-flat" IconCss="e-save-icon e-btn-sb-icons" Content="Save" OnClick="SaveOnClick"></EjsButton>
+            </Template>
+        </ToolbarItem>
+        <ToolbarItem>
+            <Template>
+                <EjsButton ID="runbutton" CssClass="e-flat" IconCss="e-run-icon e-btn-sb-icons" Content="Run" OnClick="RunOnClick"></EjsButton>
+            </Template>
+        </ToolbarItem>
+        <ToolbarItem Align="ItemAlign.Right" CssClass="cddl">
+            <Template>
+                <EjsDropDownList Width="150px" Placeholder="Pick Project Template" TValue="string" TItem="ProjectData" DataSource="@Projects">
+                    <DropDownListFieldSettings Text="Text" Value="ID"></DropDownListFieldSettings>
+                    <DropDownListEvents TValue="string" ValueChange="@OnProjectChange"></DropDownListEvents>
+                </EjsDropDownList>
+            </Template>
+        </ToolbarItem>
+    </ToolbarItems>
+</EjsToolbar>
+<style>
+
+    .e-toolbar .e-toolbar-items.e-tbar-pos,
+    .e-toolbar {
+        background: #1713B0;
+    }
+
+    .sync-image {
+        width: 130px;
+    }
+
+    .title {
+        font-size: 14px;
+        font-weight: 900;
+        color: #fff;
+    }
+
+    .e-save-icon::before {
+        content: '\e98e';
+    }
+
+    .e-run-icon::before {
+        content: '\e324';
+    }
+
+    .e-btn-sb-icons {
+        font-family: 'e-icons';
+        line-height: 1;
+        font-style: normal;
+        font-weight: normal;
+        font-variant: normal;
+        text-transform: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+</style>
+@code{
+
+    LiveEditor liveEditor = new LiveEditor();
+
+    public void SaveOnClick(MouseEventArgs args)
+    {
+
+    }
+    public void RunOnClick(MouseEventArgs args)
+    {
+        JSRuntime.InvokeVoidAsync("exampleJsFunctions.RunButtonClick", DotNetObjectReference.Create(this));
+    }
+    public void OnProjectChange(ChangeEventArgs<string> args)
+    {
+
+    }
+    private List<ProjectData> Projects = new List<ProjectData>() {
+        new ProjectData(){ ID= "Server", Text= "Server App" },
+        new ProjectData(){ ID= "Client", Text= "Web Assembly App" }
+     };
+    public class ProjectData
+    {
+        public string ID { get; set; }
+        public string Text { get; set; }
+    }
+
+    [JSInvokable]
+
+    public void onBuild(DataValue data)
+    {
+        liveEditor.BuildEngine(data, JSRuntime);
+    }
+}

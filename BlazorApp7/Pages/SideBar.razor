@@ -1,0 +1,73 @@
+﻿@page "/SideBar"
+
+@using Syncfusion.EJ2.Blazor.DropDowns
+@using Syncfusion.EJ2.Blazor.Navigations
+
+
+<EjsSidebar>
+    <ChildContent>
+        <EjsAccordion>
+            <AccordionItems>
+                <AccordionItem Header="Choose Packages" Expanded="true">
+                    <ContentTemplate>
+                        <EjsDropDownList TValue="String" TItem="PackageList" Placeholder="Choose version" DataSource="@Package">
+                            <DropDownListFieldSettings Text="Version" Value="Version"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="String" ValueChange="OnPackageChange"></DropDownListEvents>
+                        </EjsDropDownList>
+                    </ContentTemplate>
+                </AccordionItem>
+                <AccordionItem Header="Examples" Expanded="true">
+                    <ContentTemplate>
+                        <EjsDropDownList TValue="String" TItem="ControlList" Placeholder="Choose Components" DataSource="@Controls">
+                            <DropDownListFieldSettings Text="Control" Value="Control"></DropDownListFieldSettings>
+                            <DropDownListEvents TValue="String" ValueChange="OnControlChange"></DropDownListEvents>
+                        </EjsDropDownList>
+                    </ContentTemplate>
+                </AccordionItem>
+            </AccordionItems>
+        </EjsAccordion>
+    </ChildContent>
+</EjsSidebar>
+
+<style>
+    .e-sidebar.e-left {
+        width: 250px !important;
+        margin-top: 65px;
+    }
+</style>
+
+
+
+
+@code  {
+
+    public class PackageList
+    {
+        public string Version { get; set; }
+    }
+
+    List<PackageList> Package = new List<PackageList>
+{
+        new PackageList() { Version = "17.4.39" },
+        new PackageList() { Version = "17.4.40" },
+    };
+    public class ControlList
+    {
+        public string Control { get; set; }
+    }
+    List<ControlList> Controls = new List<ControlList>
+{
+        new ControlList() { Control = "Button"},
+        new ControlList() { Control = "Textbox"},
+        new ControlList() { Control = "Grid"},
+        new ControlList() { Control = "Schedule"},
+    };
+    public void OnPackageChange(ChangeEventArgs<String> args)
+    {
+        // Install the changed packages
+    }
+    public void OnControlChange(ChangeEventArgs<String> args)
+    {
+        // Install the changed packages
+    }
+}

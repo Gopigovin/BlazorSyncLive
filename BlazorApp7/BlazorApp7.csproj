@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Samples\**" />
+    <Content Remove="Samples\**" />
+    <EmbeddedResource Remove="Samples\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Samples\**" CopyToOutputDirectory="Always" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <PackageReference Include="Syncfusion.EJ2.Blazor" Version="17.4.0.40" />
+  </ItemGroup>
+
+</Project>
