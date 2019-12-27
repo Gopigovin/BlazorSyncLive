@@ -17,7 +17,6 @@ namespace BlazorApp7
     {
         public Startup(IConfiguration configuration)
         {
-            Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("MDAxQDMxMzcyZTM0MmUzMFZmeFV0QVdjMmVYQ2ozK2F0L2RVeHJSa09RNlBrRW1kUVVwMXVIbFRKdmM9");
             Configuration = configuration;
         }
 
