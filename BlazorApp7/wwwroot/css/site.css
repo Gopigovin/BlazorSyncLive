@@ -190,3 +190,11 @@ app {
 #blazor-license-warning {
     display: none;
 }
+
+#full:before {
+    content: "\e771";
+    font-family: e-icons;
+    font-size: 18px;
+    font-weight: normal;
+    margin-top: 5px;
+}
