@@ -8,60 +8,87 @@
 @using BlazorApp7.Data;
 @inject IJSRuntime JSRuntime
 
-<EjsToolbar Height="65px">
-    <ToolbarItems>
-        <ToolbarItem>
-            <Template>
-                <div>
-                    <img class="sync-image" src="https://cdn.syncfusion.com/content/images/Logo/Logo_150dpi.png" />
-                    <span class="title">BLAZOR PLAYGROUND </span>
-                </div>
-            </Template>
-        </ToolbarItem>
-        <ToolbarItem>
-            <Template>
-                <EjsButton CssClass="e-flat" IconCss="e-save-icon e-btn-sb-icons" Content="Save" OnClick="SaveOnClick"></EjsButton>
-            </Template>
-        </ToolbarItem>
-        <ToolbarItem>
-            <Template>
-                <EjsButton ID="runbutton" CssClass="e-flat" IconCss="e-run-icon e-btn-sb-icons" Content="Run" OnClick="RunOnClick"></EjsButton>
-            </Template>
-        </ToolbarItem>
-        <ToolbarItem Align="ItemAlign.Right" CssClass="cddl">
-            <Template>
-                <EjsDropDownList Width="150px" Placeholder="Pick Project Template" TValue="string" TItem="ProjectData" DataSource="@Projects">
-                    <DropDownListFieldSettings Text="Text" Value="ID"></DropDownListFieldSettings>
-                    <DropDownListEvents TValue="string" ValueChange="@OnProjectChange"></DropDownListEvents>
-                </EjsDropDownList>
-            </Template>
-        </ToolbarItem>
-    </ToolbarItems>
-</EjsToolbar>
-<style>
+    <EjsToolbar Height="65px">
+        <ToolbarItems>
+            <ToolbarItem>
+                <Template>
+                    <div>
+                        <img class="sync-image" src="https://ej2.syncfusion.com/home/images/PlatformIcons/blazor.svg" />
+                        <span class="title">Sync Live </span>
+                    </div>
+                </Template>
+            </ToolbarItem>
+            <ToolbarItem Align="ItemAlign.Right">
+                <Template>
+                    <EjsButton ID="runbutton" CssClass="e-flat e-primary" IconCss="e-run-icon e-btn-sb-icons" Content="Run" OnClick="RunOnClick"></EjsButton>
+                </Template>
+            </ToolbarItem>
+            <ToolbarItem Align="ItemAlign.Right">
+                <Template>
+                    <EjsDropDownList TValue="String" TItem="ControlList" Placeholder="Choose control" DataSource="@Controls">
+                        <DropDownListFieldSettings Text="Control" Value="Id"></DropDownListFieldSettings>
+                        <DropDownListEvents TValue="String" ValueChange="OnControlChange"></DropDownListEvents>
+                    </EjsDropDownList>
+                </Template>
+            </ToolbarItem>
+            <ToolbarItem Align="ItemAlign.Right">
+                <Template>
+                    <EjsDropDownList Placeholder="Pick Project Template" TValue="string" TItem="ProjectData" DataSource="@Projects">
+                        <DropDownListFieldSettings Text="Text" Value="ID"></DropDownListFieldSettings>
+                        <DropDownListEvents TValue="string" ValueChange="@OnProjectChange"></DropDownListEvents>
+                    </EjsDropDownList>
+                </Template>
+            </ToolbarItem>
+        </ToolbarItems>
+    </EjsToolbar>
+<style> 
 
     .e-toolbar .e-toolbar-items.e-tbar-pos,
     .e-toolbar {
         background: #1713B0;
     }
-
+     
     .sync-image {
         width: 130px;
     }
-
+     
     .title {
-        font-size: 14px;
+        font-size: 20px;
         font-weight: 900;
         color: #fff;
+        vertical-align: middle;
     }
+
+
+
+    .sync-image {
+        width: 73px;
+    }
+
+
+
 
     .e-save-icon::before {
-        content: '\e98e';
+        content: '\e74d';
     }
 
+
+
+
+
     .e-run-icon::before {
-        content: '\e324';
+        content: '\e72d';
     }
+
+
+
+
+    .e-toolbar .e-toolbar-items.e-tbar-pos,
+    .e-toolbar {
+        background: #1713F6;
+    }
+
+
 
     .e-btn-sb-icons {
         font-family: 'e-icons';
@@ -82,6 +109,12 @@
     {
 
     }
+
+    public void OnControlChange(ChangeEventArgs<String> args)
+    {
+        string controlPage = liveEditor.getControlText(args.Value);
+        JSRuntime.InvokeVoidAsync("exampleJsFunctions.setControl", controlPage);
+    }
     public void RunOnClick(MouseEventArgs args)
     {
         JSRuntime.InvokeVoidAsync("exampleJsFunctions.RunButtonClick", DotNetObjectReference.Create(this));
@@ -90,6 +123,21 @@
     {
 
     }
+    public class ControlList
+    {
+        public string Control { get; set; }
+        public string Id { get; set; }
+    }
+
+ 
+
+    List<ControlList> Controls = new List<ControlList>
+{
+        new ControlList() { Control = "Calendar", Id= "calendar"},
+        new ControlList() { Control = "Chart", Id= "chart"},
+        new ControlList() { Control = "Grid", Id= "grid"},
+        new ControlList() { Control = "Scheduler", Id= "schedule"},
+    };
     private List<ProjectData> Projects = new List<ProjectData>() {
         new ProjectData(){ ID= "Server", Text= "Server App" },
         new ProjectData(){ ID= "Client", Text= "Web Assembly App" }

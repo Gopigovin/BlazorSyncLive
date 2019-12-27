@@ -177,3 +177,16 @@ app {
         display: block;
     }
 }
+
+#full:before {
+    content: "\e744";
+    font-size: 18px;
+    font-weight: normal;
+    margin-top: 5px;
+}
+
+
+
+#blazor-license-warning {
+    display: none;
+}

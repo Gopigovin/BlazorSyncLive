@@ -33,7 +33,14 @@ namespace BlazorApp7.Data
             return text;
         }
 
-        
+        public string getControlText(string filename)
+        {
+            var file = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "pages", filename + ".txt");
+            string text = File.ReadAllText(file);
+            return text;
+        }
+
+
         public string templateLocation = Path.Combine(Directory.GetCurrentDirectory(), "Samples/BlazorAppServer/BlazorAppServer");
 
         Process process = new Process();
@@ -45,8 +52,8 @@ namespace BlazorApp7.Data
             var startUpCode = data.startup;
             var hostCode = data.host;
             var pageCode = data.pages;
-            System.IO.File.WriteAllText(templateLocation + @"\Startup.cs", startUpCode);
-            System.IO.File.WriteAllText(templateLocation + @"\Pages\_Host.cshtml", hostCode);
+            System.IO.File.WriteAllText(templateLocation + @"\Startup.cs", hostCode);
+            System.IO.File.WriteAllText(templateLocation + @"\Pages\_Host.cshtml", startUpCode);
             System.IO.File.WriteAllText(templateLocation + @"\Pages\Index.razor", pageCode);
             
             List<string> cmds = new List<string>();

@@ -24,39 +24,62 @@
                                             <ChildContent>
                                                 <div class="code-editor-content">
                                                     <EjsTab @ref="Tab" CssClass="default-tab">
+                                                        <TabEvents Created="onFirstTabCreated"></TabEvents>
+
                                                         <TabItems>
                                                             <TabItem>
                                                                 <ChildContent>
                                                                     <TabHeader Text="INDEX"></TabHeader>
                                                                 </ChildContent>
+                                                                <ContentTemplate>
+                                                                    <textarea id="pageCode" @bind="@this.pageCode"></textarea>
+                                                                </ContentTemplate>
                                                             </TabItem>
                                                         </TabItems>
                                                     </EjsTab>
-                                                    <textarea id="pageCode" @bind="@this.pageCode"></textarea>
                                                 </div>
                                             </ChildContent>
                                         </SplitterPane>
                                         <SplitterPane Size="50%" Collapsible="true">
-                                            <EjsSplitter Orientation="Syncfusion.EJ2.Blazor.Layouts.Orientation.Horizontal">
-                                                <SplitterPanes>
-                                                    <SplitterPane Collapsible="true">
-                                                        <div id="pane2">
-                                                            <div class="cont">
-                                                                <textarea id="controllerCode" @bind="@this.hostHtmlCode"></textarea>
-                                                                @*<span id="model" class="span sh"></span>*@
-                                                            </div>
-                                                        </div>
-                                                    </SplitterPane>
-                                                    <SplitterPane Collapsible="true">
-                                                        <div id="pane3">
-                                                            <div class="cont">
-                                                                <textarea id="viewCode" @bind="@this.startUpCode"></textarea>
-                                                                @*<span id="controller" class="span sh">Controller</span>*@
-                                                            </div>
-                                                        </div>
-                                                    </SplitterPane>
-                                                </SplitterPanes>
-                                            </EjsSplitter>
+                                            <div>
+                                                <EjsTab @ref="sourceTab">
+                                                    <TabEvents Created="onSecondTabCreated" Selected="OnSourceClicked"></TabEvents>
+                                                    <TabItems>
+                                                        <TabItem>
+                                                            <ChildContent>
+                                                                <TabHeader Text="_Host.cshtml"></TabHeader>
+                                                            </ChildContent>
+                                                            <ContentTemplate>
+                                                                <div id="pane2">
+                                                                    <div class="cont">
+                                                                        <textarea id="controllerCode" @bind="@this.hostHtmlCode"></textarea>
+                                                                        @*<span id="model" class="span sh"></span>*@
+                                                                    </div>
+                                                                </div>
+                                                                <div id="pane3" style="display: none">
+                                                                    <div class="cont">
+                                                                        <textarea id="viewCode" @bind="@this.startUpCode"></textarea>
+                                                                        @*<span id="controller" class="span sh">Controller</span>*@
+                                                                    </div>
+                                                                </div>
+                                                            </ContentTemplate>
+                                                        </TabItem>
+                                                        <TabItem>
+                                                            <ChildContent>
+                                                                <TabHeader Text="Startup.cs"></TabHeader>
+                                                            </ChildContent>
+                                                            <ContentTemplate>
+                                                                <div id="pane3">
+                                                                    <div class="cont">
+                                                                        <textarea id="viewCode1" @bind="@this.startUpCode"></textarea>
+                                                                        @*<span id="controller" class="span sh">Controller</span>*@
+                                                                    </div>
+                                                                </div>
+                                                            </ContentTemplate>
+                                                        </TabItem>
+                                                    </TabItems>
+                                                </EjsTab>
+                                            </div>
                                         </SplitterPane>
                                     </SplitterPanes>
                                 </EjsSplitter>
@@ -80,8 +103,10 @@
                                             </div>
                                         </SplitterPane>
                                         <SplitterPane Collapsible="true">
-                                            <div id="outputlogs" style="height: 30%;">
+                                            <div>
+                                                <div id="outputlogs" style="height: 30%;">
 
+                                                </div>
                                             </div>
                                         </SplitterPane>
                                     </SplitterPanes>
@@ -99,7 +124,7 @@
 @code{
 
     EjsDialog DialogObj;
-    //EjsSpinner spinnerObj;    
+    EjsTab sourceTab;
 
     EjsTextBox TextboxObj;
 
@@ -122,6 +147,31 @@
         new TabItem() { Header = new TabHeader() { Text = @dynamicHeader } }
       };
         this.Tab.AddTab(source, this.Tab.Items.Count() - 1);
+    }
+
+    private void onFirstTabCreated()
+    {
+        this.JSRuntime.InvokeVoidAsync("exampleJsFunctions.tabFirstContent", DotNetObjectReference.Create(this));
+    }
+
+ 
+
+    private void onSecondTabCreated()
+    {
+        this.JSRuntime.InvokeVoidAsync("exampleJsFunctions.tabSecondContent", DotNetObjectReference.Create(this));
+    }
+    private void OnSourceClicked(Syncfusion.EJ2.Blazor.Navigations.SelectEventArgs args)
+    {
+        if (args.SelectedIndex == 0)
+        {
+            JSRuntime.InvokeVoidAsync("exampleJsFunctions.setFirstContent", this.hostHtmlCode);
+            //this.JSRuntime.InvokeVoidAsync("exampleJsFunctions.tabFirstContent", DotNetObjectReference.Create(this));
+        }
+        else
+        {
+            JSRuntime.InvokeVoidAsync("exampleJsFunctions.setSecondContent", this.startUpCode);
+            //this.JSRuntime.InvokeVoidAsync("exampleJsFunctions.tabSecondContent", DotNetObjectReference.Create(this));
+        }
     }
 
     private void OncancelBtnclick()

@@ -1,0 +1,6 @@
+@page "/"
+
+@using Syncfusion.EJ2.Blazor
+@using Syncfusion.EJ2.Blazor.Calendars
+
+<EjsCalendar TValue="DateTime?"></EjsCalendar>
